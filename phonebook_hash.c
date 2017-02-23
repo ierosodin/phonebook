@@ -52,9 +52,8 @@ unsigned int hashFunc(char lastName[])
 void free_list(entry *e)
 {
     entry *tmp;
-    while (e) {
-        tmp = e->pNext;
-        free(e);
-        e = tmp;
+    while ((tmp = e) != NULL) {
+        e = e->pNext;
+        free(tmp);
     }
 }
