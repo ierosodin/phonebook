@@ -24,17 +24,11 @@ entry *findName(char lastName[], entry *pHead[])
 void append(char lastName[], entry *e[])
 {
     /* allocate memory for the new entry and put lastName */
-    entry *tmp;
     unsigned int n = hashFunc(lastName);
-    if (e[n]->pNext == NULL)
-        tmp = e[n];
-    else
-        tmp = e[n]->pNext;
-    tmp->pNext = (entry *) malloc(sizeof(entry));
-    tmp = tmp->pNext;
-    strcpy(tmp->lastName, lastName);
-    tmp->pNext = NULL;
-    e[n] = tmp;
+    e[n]->pNext = (entry *) malloc(sizeof(entry));
+    e[n] = e[n]->pNext;
+    strcpy(e[n]->lastName, lastName);
+    e[n]->pNext = NULL;
 }
 
 unsigned int hashFunc(char lastName[])
