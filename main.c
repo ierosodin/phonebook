@@ -17,6 +17,7 @@
 #endif
 
 #define DICT_FILE "./dictionary/words.txt"
+#define SLOT_FILE "slots.txt"
 
 static double diff_in_second(struct timespec t1, struct timespec t2)
 {
@@ -38,6 +39,10 @@ int main(int argc, char *argv[])
     char line[MAX_LAST_NAME_SIZE];
     struct timespec start, end;
     double cpu_time1, cpu_time2;
+
+#if defined HASH || defined MPOOL
+    static int slot[SIZE];
+#endif
 
     /* check file opening */
     fp = fopen(DICT_FILE, "r");
@@ -78,7 +83,9 @@ int main(int argc, char *argv[])
         i = 0;
 
 #if defined HASH || defined MPOOL
-        append(line, e);
+        unsigned int hash_number = hashFunc(line);
+        slot[hash_number]++;
+        e[hash_number] = append(line, e[hash_number]);
 #else
         e = append(line, e);
 #endif
@@ -134,6 +141,13 @@ int main(int argc, char *argv[])
         pHead = pHead->pNext;
         free(tmp);
     }
+#endif
+
+#if defined HASH || defined MPOOL
+    FILE *slot_file = fopen(SLOT_FILE, "a");
+    for (i = 0; i < SIZE; i++)
+        fprintf(slot_file, "%d %d\n", i, slot[i]);
+    fclose(slot_file);
 #endif
 
     return 0;

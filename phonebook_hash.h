@@ -6,7 +6,7 @@
 /* TODO: After modifying the original version, uncomment the following
  * line to set OPT properly */
 #define HASH 1
-#define SIZE 3571
+#define SIZE 42737
 typedef struct __PHONE_BOOK_INFO {
     char firstName[16];
     char email[16];
@@ -26,7 +26,7 @@ typedef struct __PHONE_BOOK_ENTRY {
 } entry;
 
 entry *findName(char lastName[], entry *pHead[]);
-void append(char lastName[], entry *e[]);
+entry *append(char lastName[], entry *e);
 unsigned int hashFunc(char *str);
 void free_list(entry *e);
 #endif

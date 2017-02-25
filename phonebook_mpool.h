@@ -28,7 +28,7 @@ typedef struct __PHONE_BOOK_ENTRY {
 void create_m_pool(int size);
 void free_m_pool(void);
 entry *findName(char lastName[], entry *pHead[]);
-void append(char lastName[], entry *e[]);
+entry *append(char lastName[], entry *e);
 unsigned int hashFunc(char *str);
 void free_list(entry *e);
 #endif

@@ -34,14 +34,14 @@ entry *findName(char lastName[], entry *pHead[])
     return NULL;
 }
 
-void append(char lastName[], entry *e[])
+entry *append(char lastName[], entry *e)
 {
     /* allocate memory for the new entry and put lastName */
-    unsigned int n = hashFunc(lastName);
-    e[n]->pNext = (entry *) pool_access(pool, sizeof(entry));
-    e[n] = e[n]->pNext;
-    strcpy(e[n]->lastName, lastName);
-    e[n]->pNext = NULL;
+    e->pNext = (entry *) pool_access(pool, sizeof(entry));
+    e = e->pNext;
+    strcpy(e->lastName, lastName);
+    e->pNext = NULL;
+    return e;
 }
 
 unsigned int hashFunc(char lastName[])
