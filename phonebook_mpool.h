@@ -29,6 +29,12 @@ void create_m_pool(int size);
 void free_m_pool(void);
 entry *findName(char lastName[], entry *pHead[]);
 entry *append(char lastName[], entry *e);
-unsigned int hashFunc(char *str);
+unsigned int BKDRHash(char *str);
+unsigned int ELFHash(char *str);
+unsigned int PJWHash(char *str);
+unsigned int APHash(char *str);
+unsigned int SDBMHash(char *str);
+unsigned int RSHash(char *str);
+unsigned int JSHash(char *str);
 void free_list(entry *e);
 #endif

@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
         i = 0;
 
 #if defined HASH || defined MPOOL
-        unsigned int hash_number = hashFunc(line);
+        unsigned int hash_number = BKDRHash(line);
         slot[hash_number]++;
         e[hash_number] = append(line, e[hash_number]);
 #else
