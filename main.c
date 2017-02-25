@@ -121,10 +121,13 @@ int main(int argc, char *argv[])
     printf("execution time of findName() : %lf sec\n", cpu_time2);
 
 #ifdef HASH
+    for (i = 0; i < SIZE; i++)
+        if (e[i])
+            free_list(e[i]->pNext);
     free(pHead);
 #elif MPOOL
     free_m_pool();
-    free_list(pHead);
+    free(pHead);
 #else
     entry *tmp;
     while ((tmp = pHead) != NULL) {
