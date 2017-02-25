@@ -46,11 +46,11 @@ int main(int argc, char *argv[])
 
     /* build the entry */
 #ifdef HASH
-    entry *pHead[SIZE], *e[SIZE];
+    entry *pHead, *e[SIZE];
     printf("size of entry : %lu bytes\n", sizeof(entry));
+    pHead = (entry *) malloc(sizeof(entry) * SIZE);
     for (i = 0; i < SIZE; i++) {
-        pHead[i] = (entry *) malloc(sizeof(entry));
-        e[i] = pHead[i];
+        e[i] = &pHead[i];
         e[i]->pNext = NULL;
     }
 #else
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
 #ifdef HASH
     for (i = 0; i < SIZE; i++) {
-        e[i] = pHead[i];
+        e[i] = &pHead[i];
     }
 #else
     e = pHead;
@@ -115,9 +115,7 @@ int main(int argc, char *argv[])
     printf("execution time of findName() : %lf sec\n", cpu_time2);
 
 #ifdef HASH
-    for (i = 0; i < SIZE; i++)
-        if (pHead[i])
-            free_list(pHead[i]);
+    free_list(pHead);
 #else
     entry *tmp;
     while ((tmp = pHead) != NULL) {
