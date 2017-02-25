@@ -64,8 +64,29 @@ int main(void)
         hash_sum_a += hash_a;
         hash_sum_f += hash_f;
     }
-    fprintf(output, "append() %lf %lf %lf\n",orig_sum_a / 100.0, opt_sum_a / 100.0, hash_sum_a / 100.0);
-    fprintf(output, "findName() %lf %lf %lf", orig_sum_f / 100.0, opt_sum_f / 100.0, hash_sum_f / 100.0);
+    fclose(fp);
+
+    fp = fopen("mpool.txt", "r");
+    if (!fp) {
+        fp = fopen("orig.txt", "r");
+        if (!fp) {
+            printf("ERROR opening input file mpool.txt\n");
+            exit(0);
+        }
+    }
+    double mpool_sum_a = 0.0, mpool_sum_f = 0.0, mpool_a, mpool_f;
+    for (i = 0; i < 100; i++) {
+        if (feof(fp)) {
+            printf("ERROR: You need 100 datum instead of %d\n", i);
+            printf("run 'make run' longer to get enough information\n\n");
+            exit(0);
+        }
+        fscanf(fp, "%s %s %lf %lf\n", append, find, &mpool_a, &mpool_f);
+        mpool_sum_a += mpool_a;
+        mpool_sum_f += mpool_f;
+    }
+    fprintf(output, "append() %lf %lf %lf %lf\n",orig_sum_a / 100.0, opt_sum_a / 100.0, hash_sum_a / 100.0, mpool_sum_a / 100.0);
+    fprintf(output, "findName() %lf %lf %lf %lf", orig_sum_f / 100.0, opt_sum_f / 100.0, hash_sum_f / 100.0, mpool_sum_f / 100.0);
     fclose(output);
     fclose(fp);
     return 0;
