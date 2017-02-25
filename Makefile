@@ -3,8 +3,9 @@ CFLAGS_common ?= -Wall -std=gnu99
 CFLAGS_orig = -O0
 CFLAGS_opt  = -O0
 CFLAGS_hash = -O0
+CFLAGS_mpool = -O0
 
-EXEC = phonebook_orig phonebook_opt phonebook_hash
+EXEC = phonebook_orig phonebook_opt phonebook_hash phonebook_mpool
 
 GIT_HOOKS := .git/hooks/pre-commit
 .PHONY: all
@@ -14,7 +15,7 @@ $(GIT_HOOKS):
 	@scripts/install-git-hooks
 	@echo
 
-SRCS_common = main.c
+SRCS_common = main.c memorypool.c
 
 phonebook_orig: $(SRCS_common) phonebook_orig.c phonebook_orig.h
 	$(CC) $(CFLAGS_common) $(CFLAGS_orig) \
@@ -28,6 +29,11 @@ phonebook_opt: $(SRCS_common) phonebook_opt.c phonebook_opt.h
 
 phonebook_hash: $(SRCS_common) phonebook_hash.c phonebook_hash.h
 	$(CC) $(CFLAGS_common) $(CFLAGS_hash) \
+		-DIMPL="\"$@.h\"" -o $@ \
+		$(SRCS_common) $@.c
+
+phonebook_mpool: $(SRCS_common) phonebook_mpool.c phonebook_mpool.h
+	$(CC) $(CFLAGS_common) $(CFLAGS_mpool) \
 		-DIMPL="\"$@.h\"" -o $@ \
 		$(SRCS_common) $@.c
 
@@ -45,6 +51,9 @@ cache-test: $(EXEC)
 	perf stat --repeat 100 \
 		-e cache-misses,cache-references,instructions,cycles \
 		./phonebook_hash
+	perf stat --repeat 100 \
+		-e cache-misses,cache-references,instructions,cycles \
+		./phonebook_mpool
 
 output.txt: cache-test calculate
 	./calculate

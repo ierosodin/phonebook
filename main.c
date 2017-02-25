@@ -10,6 +10,8 @@
 #define OUT_FILE "opt.txt"
 #elif HASH
 #define OUT_FILE "hash.txt"
+#elif MPOOL
+#define OUT_FILE "mpool.txt"
 #else
 #define OUT_FILE "orig.txt"
 #endif
@@ -44,8 +46,12 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+#ifdef MPOOL
+    create_m_pool(sizeof(entry) * 350000);
+#endif
+
     /* build the entry */
-#ifdef HASH
+#if defined HASH || defined MPOOL
     entry *pHead, *e[SIZE];
     printf("size of entry : %lu bytes\n", sizeof(entry));
     pHead = (entry *) malloc(sizeof(entry) * SIZE);
@@ -71,7 +77,7 @@ int main(int argc, char *argv[])
         line[i - 1] = '\0';
         i = 0;
 
-#ifdef HASH
+#if defined HASH || defined MPOOL
         append(line, e);
 #else
         e = append(line, e);
@@ -83,7 +89,7 @@ int main(int argc, char *argv[])
     /* close file as soon as possible */
     fclose(fp);
 
-#ifdef HASH
+#if defined HASH || MPOOL
     for (i = 0; i < SIZE; i++) {
         e[i] = &pHead[i];
     }
@@ -115,6 +121,9 @@ int main(int argc, char *argv[])
     printf("execution time of findName() : %lf sec\n", cpu_time2);
 
 #ifdef HASH
+    free(pHead);
+#elif MPOOL
+    free_m_pool();
     free_list(pHead);
 #else
     entry *tmp;
